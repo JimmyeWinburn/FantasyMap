@@ -16,13 +16,14 @@ public class Triangle {
 		points[0] = p1;
 		points[1] = p2;
 		points[2] = p3;
-	};
+	}
 
 	private Point3[] points = new Point3[3];
 
 	public Point3 [] getPoints() {
 		return points;
 	}
+	
 	
 	
 	/**
@@ -38,7 +39,7 @@ public class Triangle {
 		
 		// If triangle is a leaf, we can just add it to the list of displayable triangles and be done.
 		if (length < Globals.getMaxLineSize()) {
-				Globals.getTriangleList().add(triangle);	
+				TriangleList.get().add(triangle);	
 				return;
 		}
 
@@ -59,7 +60,7 @@ public class Triangle {
 			// if midpoint is not in the Point Set, create a new one and add it to the Map
 			else {    
 				// otherwise calculate new Z coordinate and add the point to the Point Map
-				midPoint[i].setZ ( midPoint[i].getZ() + (float)Globals.getNextRandomHeight() * length);
+				midPoint[i].setZ ( midPoint[i].getZ() + (float)RandomAlt.getNext( length) );
 				//midPoint[i].setZ( MapColor.borderRuleFilter( midPoint[i]) );
 				Globals.maxHeight = midPoint[i].getZ() > Globals.maxHeight ? midPoint[i].getZ() : Globals.maxHeight;
 				Globals.minHeight = midPoint[i].getZ() < Globals.minHeight ? midPoint[i].getZ() : Globals.minHeight;

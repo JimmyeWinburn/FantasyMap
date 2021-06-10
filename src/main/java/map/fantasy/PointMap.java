@@ -10,8 +10,8 @@ public class PointMap {
 	
 	private PointMap( ) {}
 
-	public static void initPointMap() {
-		map = new HashMap<Point3, Point3>();
+	public static void init() {
+		map = new HashMap<>();
 	}
 
 	public static Point3 get( Point3 p) {

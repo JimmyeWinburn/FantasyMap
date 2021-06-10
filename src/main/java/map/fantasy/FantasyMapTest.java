@@ -50,114 +50,6 @@ class FantasyMapTest {
 	}
 
 
-	@Test
-	void testPointArrayCreation() {
-		
-		Point p;
-		
-		try {
-			p = new Point (0, 0, 1066.0);
-			assertEquals( 1066.0, p.getZ());
-		} catch (Exception e) {
-			fail("Bad row or column specified");
-		}
-		
-
-		try {
-			p = new Point (-1, 0, 0.0);
-		} catch (Exception e) {
-			return;
-		}
-		fail("bad parameter specified and not caught");
-	}
-	
-	
-	@Test
-	void testRecursiveLineGeneration1() {
-		Point[] p = new Point[2]; 
-
-		try {
-			p[0] = new Point (0, 0, 0.0);
-			p[1] = new Point (2, 0, 0.0);
-		} catch (Exception e) {
-			fail("Bad row or column specified");
-		}
-
-		Globals.initLineSet();
-		Line line = new Line( p[0], p[1]);
-		Line.addLineToSet(line); 
-
-		Set<Line> lineSet = Globals.getLineSet();
-		assertEquals(1, lineSet.size());
-		//System.out.print(lineSet);
-		
-		
-	}
-
-	@Test
-	void testRecursiveLineGeneration2() {
-		Point[] p = new Point[2]; 
-
-		try {
-			p[0] = new Point (0, 0, 0.0);
-			p[1] = new Point (4, 0, 0.0);
-		} catch (Exception e) {
-			fail("Bad row or column specified");
-		}
-
-		Globals.initLineSet();
-		Line line = new Line( p[0], p[1]);
-		Line.addLineToSet(line); 
-
-		Set<Line> lineSet = Globals.getLineSet();
-		assertEquals(3, lineSet.size());
-
-		//System.out.print(lineSet);		
-	}
-
-	@Test
-	void testRecursiveLineGeneration3() {
-		Point[] p = new Point[2]; 
-
-		try {
-			p[0] = new Point (0, 0, 0.0);
-			p[1] = new Point (8, 0, 0.0);
-		} catch (Exception e) {
-			fail("Bad row or column specified");
-		}
-
-		Globals.initLineSet();
-		Line line = new Line( p[0], p[1]);
-		Line.addLineToSet(line); 
-
-		Set<Line> lineSet = Globals.getLineSet();
-		assertEquals(7, lineSet.size());
-
-		//System.out.print(lineSet);		
-	}
-
-	
-	@Test
-	void testGenerateDisplayableLineList() {
-		Point[] p = new Point[2]; 
-
-		try {
-			p[0] = new Point (0, 256, 0.0);
-			p[1] = new Point (8, 256, 0.0);
-		} catch (Exception e) {
-			fail("Bad row or column specified");
-		}
-
-		Globals.initLineSet();
-		Line line = new Line( p[0], p[1]);
-		Line.addLineToSet(line); 
-
-		Set<Line> lineSet = Globals.getLineSet();
-		List<Line> displayableLineList = Line.setDisplayableLineList( lineSet);
-		assertEquals(4, displayableLineList.size());
-		//System.out.print(displayableLineList);		
-	}
-
 	/*
 	@Test
 	void testGenerateTriangle1() {
@@ -185,29 +77,25 @@ class FantasyMapTest {
 	
 	@Test
 	void testGenerateTriangle2() {
-		//Globals.initPointSet();
-		PointMap.initPointMap();
-		Globals.initTriangleList();
+		PointMap.init();
+		TriangleList.init();
+		RandomAlt.init();
 
 		Point3[] p = new Point3[4]; 
-		try {
-			p[0] = new Point3 (0.0, 0.0, 0.0);
-			p[1] = new Point3 (0.0, 2.0, 0.0);
-			p[2] = new Point3 (2.0, 0.0, 0.0);
-			p[3] = new Point3 (2.0, 2.0, 0.0);
-		} catch (Exception e) {
-			fail("Bad row or column specified");
-		}
+		p[0] = new Point3 (0.0, 0.0, 0.0);
+		p[1] = new Point3 (0.0, 2.0, 0.0);
+		p[2] = new Point3 (2.0, 0.0, 0.0);
+		p[3] = new Point3 (2.0, 2.0, 0.0);
 		for (int i=0; i<3; i++) {
 			PointMap.put(p[i]); 			
 		}
-		
-	
+
+
 		Triangle.addTriangleToList( new Triangle( p[0], p[1], p[2]));
 		Triangle.addTriangleToList( new Triangle( p[1], p[2], p[3]));
 
-		List <Triangle> list = Globals.getTriangleList();
-		System.out.print( list);		
+		List <Triangle> list = TriangleList.get();
+		System.out.println( list);		
 		assertEquals(8, list.size()); 
 	}
 	

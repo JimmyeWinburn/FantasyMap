@@ -20,7 +20,7 @@ public class MeshDemo extends JPanel {
     	
         Graphics2D g2d = (Graphics2D) g.create();
         
-        Iterator<Triangle> iter = Globals.getTriangleList().iterator();
+        Iterator<Triangle> iter = TriangleList.get().iterator();
     	while (iter.hasNext()) {
     		Triangle triangle = iter.next();
     		Point3 [] points = triangle.getPoints();
@@ -40,8 +40,8 @@ public class MeshDemo extends JPanel {
    		frame.setBackground(Color.black);
    		frame.setSize(Globals.getFrameSize(), Globals.getFrameSize());
 
-   		PointMap.initPointMap();
-   		Globals.initTriangleList();
+   		PointMap.init();
+   		TriangleList.init();
    		Point3[] p = new Point3[4]; 
    		p[0] = new Point3 (0, 0, 0.0);
    		p[1] = new Point3 (0, Globals.getFrameSize(), 0.0);
