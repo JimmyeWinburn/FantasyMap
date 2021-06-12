@@ -61,9 +61,6 @@ public class Triangle {
 			else {    
 				// otherwise calculate new Z coordinate and add the point to the Point Map
 				midPoint[i].setZ ( midPoint[i].getZ() + (float)RandomAlt.getNext( length) );
-				//midPoint[i].setZ( MapColor.borderRuleFilter( midPoint[i]) );
-				Globals.maxHeight = midPoint[i].getZ() > Globals.maxHeight ? midPoint[i].getZ() : Globals.maxHeight;
-				Globals.minHeight = midPoint[i].getZ() < Globals.minHeight ? midPoint[i].getZ() : Globals.minHeight;
 				PointMap.put( midPoint[i]); 
 			}
 			endPoint[i] = p[i];
@@ -106,14 +103,16 @@ public class Triangle {
 		} 
 	}
 
-	private static float calcLength( Point3 p1, Point3 p2 ) {
+	public static float calcLength( Point3 p1, Point3 p2 ) {
 		double length = 0;
 		length += Math.pow( p2.getX() - p1.getX(), 2.0);
 		length += Math.pow( p2.getY() - p1.getY(), 2.0);
 		return (float)Math.pow( length, 0.5);
 	}
 	
-	
+	public static float averageAltitude( Triangle t) {
+		return (t.getPoints()[0].getZ() + t.getPoints()[1].getZ() + t.getPoints()[2].getZ()) / 3;
+	}
 
 	@Override
 	public String toString() {

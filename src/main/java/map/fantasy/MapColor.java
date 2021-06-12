@@ -19,7 +19,7 @@ public class MapColor {
 	public static Color getAltitudeColor( float alt) {
 		if (alt < -150 ) {
 			return MapColor.DEEP_WATER;
-		} else if (alt < -20){
+		} else if (alt < -10){
 			return MapColor.WATER;
 		} else if (alt < 0){
 			return MapColor.SHALLOW_WATER;
@@ -35,12 +35,5 @@ public class MapColor {
 		return MapColor.ICE_MOUNTAINS;
 	}
 	
-	public static float borderRuleFilter( Point3 p) {
-		if (p.getX()==0 || p.getX()== Globals.getFrameSize() || p.getY()==0 || p.getY()== Globals.getFrameSize()) {
-			return -10; 
-		} else {
-			return p.getZ();
-		}
-	}
-	
+
 }

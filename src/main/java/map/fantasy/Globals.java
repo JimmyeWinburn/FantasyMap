@@ -46,7 +46,7 @@ public class Globals {
 	/**
 	 * randomization seed.  Default =1;
 	 */
-	private static long randomSeed = 165;
+	private static long randomSeed = 1;
 	
 	public static long getRandomSeed() {
 		return randomSeed;
