@@ -7,18 +7,17 @@ public class TriangleList {
 	
 
 	/**
-	 * Triangles are stored in a global Set of lines because two triangles could share a single line 
-	 * and we don't want to overwrite the z value of the midpoint if the line is respecified. 
+	 * The list of triangles to be displayed.
 	 * 
-	 * Note: the field is static but every time the app is run the Set of lines and triangles need to be initialed.
-	 * If you call this, you don't need to also call initLineSet();
+	 * Note: the field is static but every time a new map is to be created,
+	 * it must be initialized with a call to init().
+	 * 
 	 */
 	private static List<Triangle>triangleList= null; 
 	
 	public static void init() {		
 		triangleList = new ArrayList<>();	
-	}
-	
+	}	
 	public static List<Triangle> get() {
 		return triangleList;
 	} 

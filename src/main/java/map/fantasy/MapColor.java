@@ -1,30 +1,94 @@
 package map.fantasy;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.vecmath.Vector3d;
+
+/**
+ * A singleton that defines the color of the triangle based on altitude and latitude (y component.)
+ * Values for different altitudes and latitudes can be taken from a color data file. 
+ * If no color file exists, colors are determined by altitude only and chosen from a default 
+ * list of colors.  
+ *  
+ * @author Jimmye
+ *
+ */
 public class MapColor {
 	
-	public static final Color FIELDS = new Color(57, 181, 74, 255);
-	public static final Color FORESTS = new Color(0,94,32, 255);
+	public static final Color FIELDS = new Color(147,178,102, 255);
+	public static final Color FORESTS = new Color(0,128,0, 255);
 	public static final Color MOUNTAINS = new Color(128,128,128, 255);
 	public static final Color ICE_MOUNTAINS = new Color(255,255,255, 255);
-	public static final Color SAND = new Color(253,198,137, 255);
 	public static final Color WATER = Color.blue;
 	public static final Color SHALLOW_WATER = Color.cyan;
 	public static final Color DEEP_WATER = Color.black; 
 	
 	
-	private MapColor() {}
+	private MapColor() {}   // singleton constructor 
 	
-	public static Color getAltitudeColor( float alt) {
+	private static BufferedImage colorImage = null;
+	
+	/**
+	 * every time a new map is created, MapColor must be initialized. 
+	 */
+	public static void init() {		  
+			try {
+			    colorImage = ImageIO.read( Globals.getColorFile());
+			} catch (IOException e) {}
+	}
+	
+	
+	/**
+	 * returns the color of the supplied triangle based on altitude and optionally a color file. 
+	 * @param t
+	 * @return
+	 */
+	public static Color getMapColor(Triangle t) {
+	       float aveAlt = averageAltitude( t);
+	       Color color;
+	       if ( colorImage == null) {
+	    	   color  = getAltitudeColor( aveAlt);
+	       } else {
+	    	   color = getAltitudeLatitudeColor( (int)aveAlt, (int)t.getPoints()[0].getY());
+	       }
+	        if (aveAlt > Globals.getWaterLevel()) {
+	        	double angle = getCosAngle( t, Globals.getLightVector());
+	        	color = new Color(
+	        		(int)(color.getRed() * angle ), 
+	        		(int)(color.getGreen() * angle),
+	        		(int)(color.getBlue() * angle)
+	        		);
+	        }
+	        return color;   	
+		}
+
+	
+	private static float averageAltitude( Triangle t) {
+		return (t.getPoints()[0].getZ() + t.getPoints()[1].getZ() + t.getPoints()[2].getZ()) / 3;
+	}
+
+	
+	private static Color getAltitudeLatitudeColor( int altitude, int latitude) {
+		if (altitude <= -150 ) {
+			return new Color( colorImage.getRGB( latitude, 0));
+		} else if (altitude >= 150){
+			return new Color( colorImage.getRGB( latitude, 299));
+		} else {
+			return new Color( colorImage.getRGB( latitude, altitude +150));			
+		}
+	}
+	
+	
+	private static Color getAltitudeColor( float alt) {
 		if (alt < -150 ) {
 			return MapColor.DEEP_WATER;
 		} else if (alt < -10){
 			return MapColor.WATER;
 		} else if (alt < 0){
 			return MapColor.SHALLOW_WATER;
-		//} else if (alt < 5){
-		//	return MapColor.SAND;
 		} else if (alt < 50){
 			return MapColor.FIELDS;
 		} else if (alt < 100){
@@ -33,6 +97,35 @@ public class MapColor {
 			return MapColor.MOUNTAINS;
 		}
 		return MapColor.ICE_MOUNTAINS;
+	}
+
+	
+	private static Vector3d [] getVectors( Triangle t) {
+		Point3 [] p = t.getPoints();
+		Vector3d [] vec = new Vector3d[2];
+		vec[0] = new Vector3d( 
+				p[0].getX() - p[1].getX(),
+				p[0].getY() - p[1].getY(),
+				p[0].getZ() - p[1].getZ());
+		vec[1] = new Vector3d( 
+				p[2].getX() - p[1].getX(),
+				p[2].getY() - p[1].getY(),
+				p[2].getZ() - p[1].getZ());
+		return vec;
+	}
+	
+	private static double getCosAngle( Triangle t, Vector3d light) {
+		Vector3d [] vec = getVectors(t);
+		Vector3d normal = getNormal(vec);
+		double angle = normal.angle(light) /2.0;  // angle is devided by 2 to simulate ambient light.
+		return Math.cos(angle);
+		
+	}
+	
+	private static Vector3d getNormal( Vector3d [] vec) {
+		Vector3d normal = new Vector3d();
+		normal.cross(vec[0], vec[1]);
+		return normal;
 	}
 	
 

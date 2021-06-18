@@ -1,6 +1,7 @@
 package map.fantasy;
 
 
+import java.awt.Color;
 import java.util.Arrays;
 
 
@@ -8,7 +9,7 @@ public class Triangle {
 	
 	
 	/**
-	 * A triangle is defined by 3 Points
+	 * A triangle is defined by 3 Points and a color
 	 */
 	public Triangle(Point3 p1, Point3 p2, Point3 p3) {
 		super();
@@ -18,29 +19,45 @@ public class Triangle {
 		points[2] = p3;
 	}
 
+	/**
+	 * A triangle is defined by three Point3
+	 */
 	private Point3[] points = new Point3[3];
-
 	public Point3 [] getPoints() {
 		return points;
 	}
 	
 	
+	/**
+	 * the color of the triangle.
+	 */
+	private Color color; 	
+	public Color getColor() {
+		return color;
+	}
+	private void setColor( Color c) {
+		color = c;
+	}
+	
+	
 	
 	/**
-	 * recursively add 4 sub-triangles to the Set of Triangles if it is bigger than the global maxLineSize. 
+	 * adds the triangle to the list of displayable triangles if it is a leaf.  
+	 * Is called recursively on 4 sub-triangles otherwise.
 	 */
 	public static void addTriangleToList(Triangle triangle) {
 		
 
 		// if triangle should be subsected...
 		// note: No need to test all the lengths.  If one line should be subsected, they all must be. 
-		// Since the triangles are mostly equilateral, so this shouldn't be a problem.
+		// Since the triangles are mostly equilateral, this shouldn't be a problem.
 		float length = calcLength( triangle.getPoints()[0], triangle.getPoints()[1]);
 		
 		// If triangle is a leaf, we can just add it to the list of displayable triangles and be done.
 		if (length < Globals.getMaxLineSize()) {
-				TriangleList.get().add(triangle);	
-				return;
+			triangle.setColor( MapColor.getMapColor(triangle));
+			TriangleList.get().add(triangle);	
+			return;
 		}
 
 		// otherwise triangle needs to be subsected. 
@@ -57,7 +74,7 @@ public class Triangle {
 			if (mid != null) {
 				midPoint[i].setZ( mid.getZ());
 			}
-			// if midpoint is not in the Point Set, create a new one and add it to the Map
+			// if midpoint is not in the Point Map, create a new one and add it to the map
 			else {    
 				// otherwise calculate new Z coordinate and add the point to the Point Map
 				midPoint[i].setZ ( midPoint[i].getZ() + (float)RandomAlt.getNext( length) );
@@ -83,7 +100,20 @@ public class Triangle {
 		}					
 	}
 
-	
+	/**
+	 * calculates the distance between the 2 supplied points.
+	 * 
+	 * @param p1
+	 * @param p2
+	 * @return
+	 */
+	public static float calcLength( Point3 p1, Point3 p2 ) {
+		double length = 0;
+		length += Math.pow( p2.getX() - p1.getX(), 2.0);
+		length += Math.pow( p2.getY() - p1.getY(), 2.0);
+		return (float)Math.pow( length, 0.5);
+	}
+
 	private static Point3 calcMidpoint (Point3 p1, Point3 p2) {
 		float midX    = calcMidPointByDimension(p1.getX(), p2.getX());
 		float midY    = calcMidPointByDimension(p1.getY(), p2.getY());
@@ -103,17 +133,9 @@ public class Triangle {
 		} 
 	}
 
-	public static float calcLength( Point3 p1, Point3 p2 ) {
-		double length = 0;
-		length += Math.pow( p2.getX() - p1.getX(), 2.0);
-		length += Math.pow( p2.getY() - p1.getY(), 2.0);
-		return (float)Math.pow( length, 0.5);
-	}
 	
-	public static float averageAltitude( Triangle t) {
-		return (t.getPoints()[0].getZ() + t.getPoints()[1].getZ() + t.getPoints()[2].getZ()) / 3;
-	}
-
+	
+	
 	@Override
 	public String toString() {
 		return "triangle " + Arrays.toString(this.getPoints()) + '\n';

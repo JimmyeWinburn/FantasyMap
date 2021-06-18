@@ -2,6 +2,12 @@ package map.fantasy;
 
 import javax.vecmath.Point3f;
 
+/**
+ * decorator over Point3f to allow sorting and equality on just the x and y coordinates.
+ * 
+ * @author Jimmye
+ *
+ */
 public class Point3 {
 	
 	Point3f point = null;

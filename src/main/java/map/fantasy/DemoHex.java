@@ -28,8 +28,7 @@ public class DemoHex extends JPanel {
             		new Point2D.Double( points[0].getX() , points[0].getY() ),
                		new Point2D.Double( points[1].getX() , points[1].getY() ),
                		new Point2D.Double( points[2].getX() , points[2].getY() ));
-            float aveAlt = Triangle.averageAltitude( triangle);
-            g2d.setPaint( MapColor.getAltitudeColor( aveAlt));
+            g2d.setPaint( triangle.getColor());
             g2d.fill(triangleShape);
             g2d.draw(triangleShape);  		
     	}
@@ -41,17 +40,19 @@ public class DemoHex extends JPanel {
    		frame.setBackground(Color.black);
    		frame.setSize(Globals.getFrameSize(), Globals.getFrameSize());
 
+   		MapColor.init();
    		PointMap.init();
    		TriangleList.init();
    		RandomAlt.init();
+   		
    		Point3[] p = new Point3[7]; 
-   		p[0] = new Point3 (256, 0, 0.0);
-   		p[1] = new Point3 (768, 0, 0.0);
-   		p[2] = new Point3 (256,884,  0.0);
-   		p[3] = new Point3 (768,884,  0.0);
-   		p[4] = new Point3 (0,442,  0.0);
-   		p[5] = new Point3 (1024, 442,  0.0);
-   		p[6] = new Point3 (512, 442,  0.0);
+   		p[0] = new Point3 (255, 0, 0.0);
+   		p[1] = new Point3 (767, 0, 0.0);
+   		p[2] = new Point3 (255,883,  0.0);
+   		p[3] = new Point3 (767,883,  0.0);
+   		p[4] = new Point3 (0,441,  0.0);
+   		p[5] = new Point3 (1023, 441,  0.0);
+   		p[6] = new Point3 (511, 441,  0.0);
 		
 		p[6].setZ ( p[6].getZ() + (float)RandomAlt.getNext( Triangle.calcLength( p[0], p[3])) );
 
@@ -71,21 +72,17 @@ public class DemoHex extends JPanel {
    		frame.add(panel);
    		frame.setVisible(true);
    		
-   		//System.out.println( "maxHeight=" + Globals.maxHeight);
-  		//System.out.println( "minHeight=" + Globals.minHeight);
-  		   		
+   		   		
    	}
 }
 
-/*class TrianglePath extends Path2D.Double {
+class TriangleShape extends Path2D.Double {
  	private static final long serialVersionUID = 1L;
 
-	public TrianglePath(Point2D... points) {
+	public TriangleShape(Point2D... points) {
         moveTo(points[0].getX(), points[0].getY());
         lineTo(points[1].getX(), points[1].getY());
         lineTo(points[2].getX(), points[2].getY());
         closePath();
     }
-   
 }
-*/
