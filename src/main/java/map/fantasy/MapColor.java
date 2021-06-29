@@ -34,19 +34,21 @@ public class MapColor {
 	/**
 	 * every time a new map is created, MapColor must be initialized. 
 	 */
-	public static void init() {		  
+	public static void init() {	
+		if (FantasyMap.getColorFile()!=null) {
 			try {
-			    colorImage = ImageIO.read( Globals.getColorFile());
+			    colorImage = ImageIO.read( FantasyMap.getColorFile());
 			} catch (IOException e) {}
+		}
 	}
 	
 	
 	/**
-	 * returns the color of the supplied triangle based on altitude and optionally a color file. 
+	 * returns the color of the supplied shape based on altitude and optionally a color file. 
 	 * @param t
 	 * @return
 	 */
-	public static Color getMapColor(Triangle t) {
+	public static Color getMapColor(MapShape t) {
 	       float aveAlt = averageAltitude( t);
 	       Color color;
 	       if ( colorImage == null) {
@@ -54,8 +56,8 @@ public class MapColor {
 	       } else {
 	    	   color = getAltitudeLatitudeColor( (int)aveAlt, (int)t.getPoints()[0].getY());
 	       }
-	        if (aveAlt > Globals.getWaterLevel()) {
-	        	double angle = getCosAngle( t, Globals.getLightVector());
+	        if (aveAlt > FantasyMap.getShadeLevel()) {
+	        	double angle = getCosAngle( t, FantasyMap.getLightVector());
 	        	color = new Color(
 	        		(int)(color.getRed() * angle ), 
 	        		(int)(color.getGreen() * angle),
@@ -66,7 +68,7 @@ public class MapColor {
 		}
 
 	
-	private static float averageAltitude( Triangle t) {
+	private static float averageAltitude( MapShape t) {
 		return (t.getPoints()[0].getZ() + t.getPoints()[1].getZ() + t.getPoints()[2].getZ()) / 3;
 	}
 
@@ -85,7 +87,7 @@ public class MapColor {
 	private static Color getAltitudeColor( float alt) {
 		if (alt < -150 ) {
 			return MapColor.DEEP_WATER;
-		} else if (alt < -10){
+		} else if (alt < -2){
 			return MapColor.WATER;
 		} else if (alt < 0){
 			return MapColor.SHALLOW_WATER;
@@ -100,7 +102,7 @@ public class MapColor {
 	}
 
 	
-	private static Vector3d [] getVectors( Triangle t) {
+	private static Vector3d [] getVectors( MapShape t) {
 		Point3 [] p = t.getPoints();
 		Vector3d [] vec = new Vector3d[2];
 		vec[0] = new Vector3d( 
@@ -114,7 +116,7 @@ public class MapColor {
 		return vec;
 	}
 	
-	private static double getCosAngle( Triangle t, Vector3d light) {
+	private static double getCosAngle( MapShape t, Vector3d light) {
 		Vector3d [] vec = getVectors(t);
 		Vector3d normal = getNormal(vec);
 		double angle = normal.angle(light) /2.0;  // angle is devided by 2 to simulate ambient light.
